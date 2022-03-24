@@ -10,12 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#263](https://github.com/nf-core/mag/pull/263) - Restructure binning subworkflow in preparation for aDNA workflow and extended binning
 - [#247](https://github.com/nf-core/mag/pull/247) - Add ancient DNA subworkflow
 - [#263](https://github.com/nf-core/mag/pull/263) - Add MaxBin2 as second contig binning tool
+- [#284](https://github.com/nf-core/mag/pull/285) - Add AdapterRemoval2 as an alternative read trimmer
 
 ### `Changed`
 
-- [#269](https://github.com/nf-core/mag/pull/269) - Update to nf-core 2.2 `TEMPLATE`
+- [#269](https://github.com/nf-core/mag/pull/269),[#283](https://github.com/nf-core/mag/pull/283),[#289](https://github.com/nf-core/mag/pull/289) - Update to nf-core 2.3.2 `TEMPLATE`
+- [#286](https://github.com/nf-core/mag/pull/286) - Cite our publication instead of the preprint
 
 ### `Fixed`
+
+### `Dependencies`
+
+| Tool     | Previous version | New version |
+| -------- | ---------------- | ----------- |
+| bcftools | 1.13             | 1.14        |
+| samtools | 1.14             | 1.15        |
 
 ## v2.1.1 - 2021/11/25
 
