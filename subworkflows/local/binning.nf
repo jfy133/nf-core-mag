@@ -53,7 +53,7 @@ workflow BINNING {
         }
         .set { ch_metabat_depths }
 
-    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions)
+    ch_versions = ch_versions.mix(METABAT2_JGISUMMARIZEBAMCONTIGDEPTHS.out.versions.first())
 
     // combine depths back with assemblies
     ch_metabat2_input = assemblies
@@ -84,12 +84,12 @@ workflow BINNING {
     // run binning
     if ( !params.skip_metabat2 ) {
         METABAT2_METABAT2 ( ch_metabat2_input )
-        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions)
+        ch_versions = ch_versions.mix(METABAT2_METABAT2.out.versions.first())
     }
 
     if ( !params.skip_maxbin2 ) {
         MAXBIN2 ( ch_maxbin2_input )
-        ch_versions = ch_versions.mix(MAXBIN2.out.versions)
+        ch_versions = ch_versions.mix(MAXBIN2.out.versions.first())
     }
 
     // split fastq files, depending
@@ -110,7 +110,7 @@ workflow BINNING {
     MAXBIN2.out.binned_fastas.transpose().set { ch_maxbin2_results_transposed }
 
     SPLIT_FASTA.out.unbinned.transpose().set { ch_split_fasta_results_transposed }
-    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions)
+    ch_versions = ch_versions.mix(SPLIT_FASTA.out.versions.first())
 
     // mix all bins together
     ch_metabat2_results_transposed
@@ -120,12 +120,12 @@ workflow BINNING {
     GUNZIP_BINS ( ch_final_bins_for_gunzip )
     GUNZIP_BINS.out.gunzip
         .set{ ch_binning_results_gunzipped }
-    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions)
+    ch_versions = ch_versions.mix(GUNZIP_BINS.out.versions.first())
 
     GUNZIP_UNBINS ( ch_split_fasta_results_transposed )
     GUNZIP_UNBINS.out.gunzip
         .set{ ch_splitfasta_results_gunzipped }
-    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions)
+    ch_versions = ch_versions.mix(GUNZIP_UNBINS.out.versions.first())
 
     // Compute bin depths for different samples (according to `binning_map_mode`)
     // Have to remove binner meta for grouping to mix back with original depth
@@ -141,7 +141,7 @@ workflow BINNING {
         .set { ch_depth_input }
 
     MAG_DEPTHS ( ch_depth_input )
-    ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS.out.versions.first())
 
     // Plot bin depths heatmap for each assembly and mapped samples (according to `binning_map_mode`)
     // create file containing group information for all samples
@@ -154,8 +154,8 @@ workflow BINNING {
 
     MAG_DEPTHS_PLOT ( ch_mag_depths_plot, ch_sample_groups.collect() )
     MAG_DEPTHS_SUMMARY ( MAG_DEPTHS.out.depths.map{it[1]}.collect() )
-    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.versions)
-    ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions)
+    ch_versions = ch_versions.mix(MAG_DEPTHS_PLOT.out.first())
+    ch_versions = ch_versions.mix(MAG_DEPTHS_SUMMARY.out.versions.first())
 
     // Group final binned contigs per sample for final output
     ch_binning_results_gunzipped
